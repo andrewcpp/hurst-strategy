@@ -1,13 +1,12 @@
-from __future__ import (absolute_import, division, print_function, unicode_literals)
 import backtrader as bt
 
 returns = []
 
-# Create a Stratey
-class SMACross(bt.Strategy):
+class MeanReversion(bt.Strategy):
     params = (
-        ('sma1period', 5),
-        ('sma2period', 10)
+        ('period', 20),
+        ('devfactor', 2),
+        ('movav', bt.ind.MovingAverageSimple)
     )
 
     def log(self, txt, dt=None):
@@ -25,9 +24,10 @@ class SMACross(bt.Strategy):
 
         self.returnRates = []
 
-        self.sma1 = bt.ind.SMA(period=self.params.sma1period)
-        self.sma2 = bt.ind.SMA(period=self.params.sma2period)
-        self.crossover = bt.ind.CrossOver(self.sma1, self.sma2)
+        self.mid, self.upper, self.lower = bt.ind.BollingerBands(period=self.params.period, devfactor=self.params.devfactor).lines
+        self.crossup = bt.ind.CrossUp(self.dataclose, self.lower)
+        self.crossmid = bt.ind.CrossUp(self.dataclose, self.mid)
+        self.crossdown = bt.ind.CrossDown(self.dataclose, self.upper)
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -73,9 +73,9 @@ class SMACross(bt.Strategy):
             return
 
         if not self.position:
-            if self.crossover == 1.0:
+            if self.crossup == 1.0:
                 self.log('BUY, %.2f' % self.dataclose[0])
                 self.order = self.buy()
-        elif self.crossover == -1.0:
+        elif self.crossmid == 1.0 or self.crossdown == 1.0:
                 self.log('SELL, %.2f' % self.dataclose[0])
                 self.order = self.sell()
