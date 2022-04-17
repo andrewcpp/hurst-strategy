@@ -2,6 +2,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import backtrader as bt
 
 returns = []
+hurst = []
 
 # Create a Stratey
 class SMACross(bt.Strategy):
@@ -28,6 +29,8 @@ class SMACross(bt.Strategy):
         self.sma1 = bt.ind.SMA(period=self.params.sma1period)
         self.sma2 = bt.ind.SMA(period=self.params.sma2period)
         self.crossover = bt.ind.CrossOver(self.sma1, self.sma2)
+
+        # self.hurstExp = bt.ind.HurstExponent(period=20)
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -65,6 +68,8 @@ class SMACross(bt.Strategy):
 
         self.log('OPERATION PROFIT, GROSS %.2f, NET %.2f, RETURN %.2f' %
                  (trade.pnl, trade.pnlcomm, return_rate))
+        
+        # hurst.append(self.hurstExp.hurst[0])
 
     def next(self):
         self.log('Close, %.2f' % self.dataclose[0])

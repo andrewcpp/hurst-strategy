@@ -7,7 +7,7 @@ import math
 import scipy.stats
 from datetime import datetime
 
-yf_data = yf.download('MANU', start='2020-01-01', end='2020-12-31')
+yf_data = yf.download('MANU', start='2021-12-01', end='2021-12-10')
 closings = yf_data['Close'].tolist()
 closings = closings[0:365]
 

@@ -19,7 +19,7 @@ returns_momentum = []
 returns_reversion = []
 
 # Generate returns histogram for momentum strategy
-for s in stocks[0:10]:
+for s in stocks[10:20]:
   cerebro_momentum = bt.Cerebro()
   cerebro_reversion = bt.Cerebro()
 

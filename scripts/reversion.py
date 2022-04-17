@@ -25,9 +25,10 @@ class MeanReversion(bt.Strategy):
         self.returnRates = []
 
         self.mid, self.upper, self.lower = bt.ind.BollingerBands(period=self.params.period, devfactor=self.params.devfactor).lines
-        self.crossup = bt.ind.CrossUp(self.dataclose, self.lower)
-        self.crossmid = bt.ind.CrossUp(self.dataclose, self.mid)
-        self.crossdown = bt.ind.CrossDown(self.dataclose, self.upper)
+        self.crossUpLow = bt.ind.CrossUp(self.dataclose, self.lower) # Buy
+        self.crossDownLow = bt.ind.CrossDown(self.dataclose, self.lower) # Sell, stop loss
+        self.crossDownMid = bt.ind.CrossDown(self.dataclose, self.mid) # Sell
+        self.crossDownUp = bt.ind.CrossDown(self.dataclose, self.upper) # Sell
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -73,9 +74,9 @@ class MeanReversion(bt.Strategy):
             return
 
         if not self.position:
-            if self.crossup == 1.0:
+            if self.crossUpLow == 1.0:
                 self.log('BUY, %.2f' % self.dataclose[0])
                 self.order = self.buy()
-        elif self.crossmid == 1.0 or self.crossdown == 1.0:
+        elif self.crossDownMid == 1.0 or self.crossDownUp == 1.0:
                 self.log('SELL, %.2f' % self.dataclose[0])
                 self.order = self.sell()
