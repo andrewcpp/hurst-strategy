@@ -1,8 +1,8 @@
 import backtrader as bt
 import yfinance as yf
 
-import momentum
-import reversion
+import sma_bt
+import bollinger_bt
 
 import numpy as np
 import pandas as pd
@@ -23,8 +23,8 @@ for s in stocks[10:20]:
   cerebro_momentum = bt.Cerebro()
   cerebro_reversion = bt.Cerebro()
 
-  cerebro_momentum.addstrategy(momentum.SMACross)
-  cerebro_reversion.addstrategy(reversion.MeanReversion)
+  cerebro_momentum.addstrategy(sma_bt.SMACross)
+  cerebro_reversion.addstrategy(bollinger_bt.MeanReversion)
 
   yf_data = yf.download(s, start='2019-01-01', end='2020-12-31')
   data = bt.feeds.PandasData(dataname=yf_data)
@@ -47,8 +47,8 @@ for s in stocks[10:20]:
   cerebro_reversion.run()
   print('Final Portfolio Value: %.2f' % cerebro_reversion.broker.getvalue())
 
-  returns_momentum.append(momentum.returns)
-  returns_reversion.append(reversion.returns)
+  returns_momentum.append(sma_bt.returns)
+  returns_reversion.append(bollinger_bt.returns)
 
 returns_momentum = np.array(returns_momentum)
 returns_momentum = returns_momentum.flatten()
