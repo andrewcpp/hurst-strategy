@@ -11,8 +11,8 @@ class SMA:
     # state and hyper parameters
     self.last_buy = 0
     self.holdings = False
-    self.sma1_period = 10
-    self.sma2_period = 20
+    self.sma1_period = 5
+    self.sma2_period = 10
     self.shares = 5
 
     self.n = len(prices)
@@ -64,6 +64,11 @@ class SMA:
       self.prev_sma1 = sma1
       self.prev_sma2 = sma2
 
+    if len(self.bought) > len(self.sold):
+      self.bought_dates = self.bought_dates[:-1]
+      self.bought = self.bought[:-1]
+      self.buys -= self.last_buy * self.shares
+
     return (self.balance, self.yields, self.buys, self.sells)
 
   def graph(self):
@@ -72,7 +77,7 @@ class SMA:
     plt.plot(self.dates[self.sma2_period:], self.sma2_line)
     plt.scatter(self.bought_dates, self.bought, marker='^', c="green")
     plt.scatter(self.sold_dates, self.sold, marker='v', c="red")
-    plt.legend(['Price', 'SMA1 = 10', 'SMA2 = 20', 'Buy', 'Sell'])
+    plt.legend(['Price', 'SMA1 = 5', 'SMA2 = 10', 'Buy', 'Sell'])
     plt.title("Prices vs Date")
     plt.xlabel("Date")
     plt.ylabel("Price (USD)")

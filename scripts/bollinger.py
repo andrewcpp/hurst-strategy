@@ -74,6 +74,11 @@ class Bollinger:
       self.last_sma = sma
       self.last_bottom = bottom
     
+    if len(self.bought) > len(self.sold):
+      self.bought_dates = self.bought_dates[:-1]
+      self.bought = self.bought[:-1]
+      self.buys -= self.last_buy * self.shares
+
     return (self.balance, self.yields, self.buys, self.sells)
 
   def graph(self):
