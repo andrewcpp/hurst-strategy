@@ -1,3 +1,14 @@
+###### Data packages ######
+numpy
+pandas
+
+###### Finance packages ######
 backtrader
 yfinance
+
+###### Stats packages ######
+statsmodels
+hurst
+
+###### Needs specification due to backtrader graphing ######
 matplotlib==3.2.2

@@ -10,6 +10,11 @@ import matplotlib
 import matplotlib.pyplot as plt
 # matplotlib.use('PDF')
 
+'''
+Generate sample histogram for returns on momentum and mean reversion
+from backtrader implementation.
+'''
+
 # Get list of NASDAQ stocks with mega market cap
 stocks = pd.read_csv('data/nasdaq_mega.csv')
 stocks = stocks['Symbol'].to_numpy()
